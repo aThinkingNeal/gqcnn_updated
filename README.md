@@ -25,3 +25,9 @@ Please see the [docs](https://berkeleyautomation.github.io/gqcnn/) for installat
 ## Citation
 If you use any part of this code in a publication, please cite [the appropriate Dex-Net publication](https://berkeleyautomation.github.io/gqcnn/index.html#academic-use).
 
+
+# Download the pretrained models for Dexnet:
+https://drive.google.com/file/d/1fbC0sGtVEUmAy7WPT_J-50IuIInMR9oO/view
+
+# Test command
+`python examples/policy.py FC-GQCNN-4.0-PJ --fully_conv --depth_image data/examples/clutter/phoxi/fcgqcnn/depth_0.npy --segmask data/examples/clutter/phoxi/fcgqcnn/segmask_0.png --camera_intr data/calib/phoxi/phoxi.intr`
