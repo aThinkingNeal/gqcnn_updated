@@ -255,6 +255,9 @@ if __name__ == "__main__":
     action = policy(state)
     logger.info("Planning took %.3f sec" % (time.time() - policy_start))
 
+    print("Here")
+    print(action.q_value)
+
     # Vis final grasp.
     if policy_config["vis"]["final_grasp"]:
         vis.figure(size=(10, 10))
@@ -265,3 +268,4 @@ if __name__ == "__main__":
         vis.title("Planned grasp at depth {0:.3f}m with Q={1:.3f}".format(
             action.grasp.depth, action.q_value))
         vis.show()
+    
