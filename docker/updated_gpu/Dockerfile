@@ -14,7 +14,6 @@ WORKDIR ${work_dir}
 # Update the package lists
 RUN apt-get update
 
-# Install 'apt-get' packages
 RUN apt-get install -y \
     build-essential \
     git \
@@ -25,9 +24,7 @@ RUN apt-get install -y \
     software-properties-common \
     python-software-properties
 
-
-# @TODO, install python3.7, now it is problematic
-# Add the deadsnakes PPA, update package list, and install Python 3.7
-# RUN add-apt-repository ppa:deadsnakes/ppa -y && \
-#     apt-get update && \
-#     apt-get install -y python3.7
+# Add the deadsnakes PPA, update package list, and install Python 3.6
+RUN add-apt-repository ppa:deadsnakes/ppa -y && \
+    apt-get update && \
+    apt-get install -y python3.6
