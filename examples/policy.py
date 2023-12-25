@@ -259,13 +259,13 @@ if __name__ == "__main__":
     print(action.q_value)
 
     # Vis final grasp.
-    if policy_config["vis"]["final_grasp"]:
-        vis.figure(size=(10, 10))
-        vis.imshow(rgbd_im.depth,
-                   vmin=policy_config["vis"]["vmin"],
-                   vmax=policy_config["vis"]["vmax"])
-        vis.grasp(action.grasp, scale=2.5, show_center=False, show_axis=True)
-        vis.title("Planned grasp at depth {0:.3f}m with Q={1:.3f}".format(
-            action.grasp.depth, action.q_value))
-        vis.show()
+    # if policy_config["vis"]["final_grasp"]:
+    #     vis.figure(size=(10, 10))
+    #     vis.imshow(rgbd_im.depth,
+    #                vmin=policy_config["vis"]["vmin"],
+    #                vmax=policy_config["vis"]["vmax"])
+    #     vis.grasp(action.grasp, scale=2.5, show_center=False, show_axis=True)
+    #     vis.title("Planned grasp at depth {0:.3f}m with Q={1:.3f}".format(
+    #         action.grasp.depth, action.q_value))
+    #     vis.show()
     
