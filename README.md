@@ -31,3 +31,5 @@ https://drive.google.com/file/d/1fbC0sGtVEUmAy7WPT_J-50IuIInMR9oO/view
 
 # Test Command
 Check the Makefile
+
+`make test_single_object`
