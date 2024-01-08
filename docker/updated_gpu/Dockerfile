@@ -38,14 +38,15 @@ RUN apt-get update && apt-get install -y python3-distutils && \
     rm get-pip.py
 
 # clone the repository
-RUN git clone http://192.168.1.2:9080/star_robots/star_ai/gqcnn.git && \
-    git checkout updated-gqcnn
+RUN git clone https://github.com/aThinkingNeal/gqcnn_updated.git
 
 # change the working directory to gqcnn repo
-WORKDIR ${work_dir}/gqcnn
+# @TODO, change the repo name after merge
+WORKDIR ${work_dir}/gqcnn_updated
 
 # create the virtual environment and install the libraries, including gqcnn library and requirements
-RUN python3.11 -m venv venv && \
+RUN apt-get update && apt-get install -y python3.11-venv && \
+    python3.11 -m venv venv && \
     . venv/bin/activate && \
     pip install -r requirements/test_requirements.txt && \
     pip install -e .
@@ -54,8 +55,5 @@ RUN python3.11 -m venv venv && \
 RUN wget --content-disposition https://huggingface.co/WoodenHeart0214/gqcnn/resolve/main/model_zoo.zip?download=true && \
     unzip model_zoo.zip && \
     rm model_zoo.zip && \
-    mv model_zoo/* models/ && \
-    cd models && \
-    unzip GQCNN-2.0.zip
-
+    mv model_zoo models
 
