@@ -38,7 +38,7 @@ import time
 
 import numpy as np
 
-from autolab_core import (YamlConfig, Logger, BinaryImage, CameraIntrinsics,
+from autolab_core import (Logger, BinaryImage, CameraIntrinsics,
                           ColorImage, DepthImage, RgbdImage)
 from visualization import Visualizer2D as vis
 
@@ -47,6 +47,7 @@ from gqcnn.grasping import (RobustGraspingPolicy,
                             FullyConvolutionalGraspingPolicyParallelJaw,
                             FullyConvolutionalGraspingPolicySuction)
 from gqcnn.utils import GripperMode
+from ruamel.yaml import YAML
 
 # Set up logger.
 logger = Logger.get_logger("examples/policy.py")
@@ -169,7 +170,10 @@ if __name__ == "__main__":
                     "cfg/examples/gqcnn_suction.yaml")
 
     # Read config.
-    config = YamlConfig(config_filename)
+    yaml = YAML(typ="rt")
+    with open(config_filename, "r") as config_file:     
+        config = yaml.load(config_file)
+
     inpaint_rescale_factor = config["inpaint_rescale_factor"]
     policy_config = config["policy"]
 
@@ -255,11 +259,11 @@ if __name__ == "__main__":
     action = policy(state)
     logger.info("Planning took %.3f sec" % (time.time() - policy_start))
 
-    print("action q value is: ", action.q_value)
-
+    # log the action value
+    logger.info("Action value: %f" % action.q_value)
+    
     # Vis final grasp.
     if policy_config["vis"]["final_grasp"]:
-        print("final_grasp is true")
         vis.figure(size=(10, 10))
         vis.imshow(rgbd_im.depth,
                    vmin=policy_config["vis"]["vmin"],
@@ -267,7 +271,24 @@ if __name__ == "__main__":
         vis.grasp(action.grasp, scale=2.5, show_center=False, show_axis=True)
         vis.title("Planned grasp at depth {0:.3f}m with Q={1:.3f}".format(
             action.grasp.depth, action.q_value))
-        vis.savefig('output.png')  # Save the figure to a file
+        
+        # get the path of working directory
+        cwd = os.getcwd()
+
+        # create a folder for results under the working directory if it does not exist
+        if not os.path.exists("results"):
+            os.makedirs("results")
+
+        # get the date and time
+        date_time = time.strftime("%Y%m%d-%H%M%S")
+        
+        output_file = f"results/output_{date_time}.png"
+
+        # get the absolute path of the output file
+        output_file = os.path.join(cwd, output_file)
+    
+        logger.info("Saving figure to file: %s" % output_file)
+        vis.savefig(output_file)  # Save the figure to a file
         # vis.show()
     else:
         print("final_grasp is none")
