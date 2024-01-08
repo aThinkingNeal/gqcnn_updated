@@ -38,8 +38,9 @@ import os
 import time
 
 import numpy as np
-import tensorflow as tf
-import tensorflow.contrib.framework as tcf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+
 
 from autolab_core import Logger
 from ...utils import (reduce_shape, read_pose_data, pose_dim,
@@ -340,7 +341,7 @@ class GQCNNTF(object):
             self._weights = GQCNNWeights()
 
             # Read/generate weight/bias variable names.
-            ckpt_vars = tcf.list_variables(ckpt_file)
+            ckpt_vars = tf.train.list_variables(ckpt_file)
             full_var_names = []
             short_names = []
             for variable, shape in ckpt_vars:
@@ -373,7 +374,7 @@ class GQCNNTF(object):
             self._weights = GQCNNWeights()
 
             # Read/generate weight/bias variable names.
-            ckpt_vars = tcf.list_variables(ckpt_file)
+            ckpt_vars = tf.train.list_variables(ckpt_file)
             full_var_names = []
             short_names = []
             for variable, shape in ckpt_vars:
@@ -572,18 +573,26 @@ class GQCNNTF(object):
     def close_session(self):
         """Close Tensorflow session."""
         if self._sess is None:
-            self._logger.warning("No TF Session to close...")
+            print("No TF Session to close...")
             return
-        self._logger.info("Closing TF Session...")
-        with self._graph.as_default():
-            self._sess.close()
-            self._sess = None
+        
+        # do not use logger during close session, it may cause error because of the NoneType
+        # self._logger.info("Closing TF Session...")
 
-    def __del__(self):
-        """Destructor that basically just makes sure the Tensorflow session
-        has been closed."""
-        if self._sess is not None:
-            self.close_session()
+        print("Destructor called, closing TF Session...")
+
+        if self._graph is not None:
+            with self._graph.as_default():
+                self._sess.close()
+        
+        self._sess = None
+
+    # using the __del__ method will cause the deletion twice and therefore causing errors
+    # def __del__(self):
+    #     """Destructor that basically just makes sure the Tensorflow session
+    #     has been closed."""
+    #     if self._sess is not None:
+    #         self.close_session()
 
     @property
     def input_depth_mode(self):
